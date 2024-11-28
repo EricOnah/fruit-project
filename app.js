@@ -14,15 +14,21 @@ main().catch((err) => console.error(err));
 // Insert items to fruitsDB
 
 const fruitSchema = new Schema({
-  name: String,
-  rating: Number,
+  name: {
+    type: String,
+    required: [true, "Why no name?"],
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
   review: String,
 });
 
 const Fruit = model("Fruit", fruitSchema);
 
 const orange = new Fruit({
-  name: "Orange",
   rating: 5,
   review: "Great fruit. You will like it",
 });
@@ -70,36 +76,44 @@ const grape = new Fruit({
   review: "A delicious fruit. You will love it",
 });
 
-async function findFruit() {
-  try {
-    const fruits = await Fruit.find({});
-    fruits.forEach((fruit) => {
-      console.log(fruit.name);
-    });
-  } catch (error) {
-    console.log(error);
-  } finally {
-    console.log("**************************************");
-  }
-}
+// async function findFruit() {
+//   try {
+//     const fruits = await Fruit.find({});
+//     fruits.forEach((fruit) => {
+//       console.log(fruit.name);
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     console.log("**************************************");
+//   }
+// }
 
-findFruit();
-const findPerson = async () => {
-  try {
-    const person = await Person.find({});
-    person.forEach((p) => {
-      let personFruit = p.fruit;
-      personFruit.forEach((f) => {
-        console.log(
-          `Person: ${p.name}, Preferred Fruit: ${f.name}, Rating: ${f.rating}`
-        );
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  } finally {
-    mongoose.connection.close();
-  }
-};
+// findFruit();
+// const findPerson = async () => {
+//   try {
+//     const person = await Person.find({});
+//     person.forEach((p) => {
+//       let personFruit = p.fruit;
+//       personFruit.forEach((f) => {
+//         console.log(
+//           `Person: ${p.name}, Preferred Fruit: ${f.name}, Rating: ${f.rating}`
+//         );
+//       });
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     mongoose.connection.close();
+//   }
+// };
 
-findPerson();
+// findPerson();
+
+orange.save().then((error) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Data saved");
+  }
+});
