@@ -1,4 +1,4 @@
-import { connect, Schema, model } from "mongoose";
+import { mongoose, connect, Schema, model } from "mongoose";
 
 const url = "mongodb://0.0.0.0:27017/fruitDB";
 
@@ -72,11 +72,34 @@ const grape = new Fruit({
 
 async function findFruit() {
   try {
-    const fruits = await Fruit.find({ name: "Orange" });
-    console.log(fruits);
+    const fruits = await Fruit.find({});
+    fruits.forEach((fruit) => {
+      console.log(fruit.name);
+    });
   } catch (error) {
     console.log(error);
+  } finally {
+    console.log("**************************************");
   }
 }
 
 findFruit();
+const findPerson = async () => {
+  try {
+    const person = await Person.find({});
+    person.forEach((p) => {
+      let personFruit = p.fruit;
+      personFruit.forEach((f) => {
+        console.log(
+          `Person: ${p.name}, Preferred Fruit: ${f.name}, Rating: ${f.rating}`
+        );
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    mongoose.connection.close();
+  }
+};
+
+findPerson();
