@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+import { connect, Schema, model } from "mongoose";
 
 const url = "mongodb://0.0.0.0:27017/fruitDB";
 
 async function main() {
-  await mongoose.connect(url);
+  await connect(url);
   console.log("Connected to MongoDB");
 }
 
@@ -13,13 +13,13 @@ main().catch((err) => console.error(err));
 
 // Insert items to fruitsDB
 
-const fruitSchema = new mongoose.Schema({
+const fruitSchema = new Schema({
   name: String,
   rating: Number,
   review: String,
 });
 
-const Fruit = mongoose.model("Fruit", fruitSchema);
+const Fruit = model("Fruit", fruitSchema);
 
 const orange = new Fruit({
   name: "Orange",
@@ -33,12 +33,12 @@ const apple = new Fruit({
   review: "A good fruit. You will enjoy it",
 });
 
-const personSchema = new mongoose.Schema({
+const personSchema = new Schema({
   name: String,
   age: Number,
   fruit: [fruitSchema],
 });
-const Person = mongoose.model("Person", personSchema);
+const Person = model("Person", personSchema);
 
 const person = new Person({
   name: "Eric",
@@ -69,3 +69,14 @@ const grape = new Fruit({
   rating: 5,
   review: "A delicious fruit. You will love it",
 });
+
+async function findFruit() {
+  try {
+    const fruits = await Fruit.find({ name: "Orange" });
+    console.log(fruits);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+findFruit();
