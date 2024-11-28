@@ -14,10 +14,7 @@ main().catch((err) => console.error(err));
 // Insert items to fruitsDB
 
 const fruitSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Why no name?"],
-  },
+  name: String,
   rating: {
     type: Number,
     min: 1,
@@ -29,6 +26,7 @@ const fruitSchema = new Schema({
 const Fruit = model("Fruit", fruitSchema);
 
 const orange = new Fruit({
+  name: "Orange",
   rating: 5,
   review: "Great fruit. You will like it",
 });
@@ -37,6 +35,11 @@ const apple = new Fruit({
   name: "Apple",
   rating: 4.5,
   review: "A good fruit. You will enjoy it",
+});
+
+const Pineapple = new Fruit({
+  rating: 4.5,
+  review: "A delicious fruit. You will love it",
 });
 
 const personSchema = new Schema({
@@ -110,10 +113,16 @@ const grape = new Fruit({
 
 // findPerson();
 
-orange.save().then((error) => {
-  if (error) {
+async function updateFruit() {
+  try {
+    const fruitName = await Fruit.updateOne(
+      { _id: "6748851693d034fa5b22fddb" },
+      { name: "Pineapple" }
+    );
+    console.log("Fruit name added");
+  } catch (error) {
     console.log(error);
-  } else {
-    console.log("Data saved");
   }
-});
+}
+
+updateFruit();
