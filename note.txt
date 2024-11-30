@@ -1,3 +1,38 @@
 Mongoose no loner uses callbacks for its query operations but no uses a promise.
 
 To create a connection to the database or perform query operations, we can easily use async and await methods.
+
+When using delete operations, add a logic to specify the data to be deleted. If you delete an entry that is still
+declared in the document, it creates the entry and delete the instance created eg
+
+
+
+async function deleteDocument(documentName) {
+    try {
+        await model.deleteOne(documentName)
+        console.log(`deleted: ${documentName}`)
+    } catch (error) {
+        console.log(error)
+    } finally {
+        Mongoose.connection.close();
+    }
+} 
+
+deleteDocument(peach);
+NOTE: Is document name considering it's a fruits list.
+
+If you do this while you have something like 
+const peach = new Fruit({
+  name: "Peach",
+  rating: 5,
+  review: "Yet to taste but I think you will love it",
+});
+
+Even if you don't save, insert or create peach anywhere in the document, once we call deleteDocument(peach), it will create a new document and then delete it. This is because the
+an instance of peach gets added to the database and deleted. 
+
+The proper way to have no such errors while deleting an entry is to use a query.
+
+We can use the same param to use the function in multiple times by setting the delete query to :
+deleteOne({name: documentName}) we can now add the name of the fruit(string) in the argument to delete one fruit
+that matches that name.

@@ -61,6 +61,7 @@ const person = new Person({
   ],
 });
 
+// person.save();
 const mango = new Fruit({
   name: "Mango",
   rating: 4,
@@ -77,6 +78,12 @@ const grape = new Fruit({
   name: "Grapefruit",
   rating: 5,
   review: "A delicious fruit. You will love it",
+});
+
+const peach = new Fruit({
+  name: "Peach",
+  rating: 5,
+  review: "Yet to taste but I think you will love it",
 });
 
 // async function findFruit() {
@@ -125,4 +132,26 @@ async function updateFruit() {
   }
 }
 
-updateFruit();
+async function deletePeach(fruitName) {
+  try {
+    await Fruit.deleteOne(fruitName);
+    console.log(`${fruitName} has been deleted`);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    mongoose.connection.close();
+  }
+}
+
+async function deletePersons(personName) {
+  try {
+    await Person.deleteMany({ name: personName });
+    console.log("deleted");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    mongoose.connection.close();
+  }
+}
+
+deletePersons("Eric");
